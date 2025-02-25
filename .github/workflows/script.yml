@@ -2,7 +2,7 @@ name: Build Zen Browser for Fedora
 
 on:
    schedule:
-      - cron: "30 3,9,15,21 * * *" # 9 AM, 3 PM, 9 PM, 3 AM IST
+      - cron: "0 */6 * * *" # Run every 6 hours
    workflow_dispatch: # Allow manual triggering
 
 permissions:
