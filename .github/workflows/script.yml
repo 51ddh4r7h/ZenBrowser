@@ -1,0 +1,125 @@
+name: Build Zen Browser for Fedora
+
+on:
+   schedule:
+      - cron: "30 3,9,15,21 * * *" # 9 AM, 3 PM, 9 PM, 3 AM IST
+   workflow_dispatch: # Allow manual triggering
+
+permissions:
+   contents: write
+
+jobs:
+   # First job: Build in container
+   build-in-container:
+      runs-on: ubuntu-latest
+      container: fedora:latest
+      outputs:
+         new_version: ${{ steps.set-version.outputs.version }}
+         updated: ${{ steps.set-version.outputs.updated }}
+
+      steps:
+         - name: Check out repository
+           uses: actions/checkout@v4
+
+         - name: Install base dependencies
+           run: |
+              dnf install -y python3 python3-pip rpm-build rpmdevtools copr-cli git curl
+
+         - name: Install UV
+           run: |
+              curl -LsSf https://astral.sh/uv/install.sh | sh
+              echo "/root/.local/bin" >> $GITHUB_PATH
+
+         - name: Install Python dependencies with UV
+           run: |
+              uv self update
+              uv venv
+              echo "VIRTUAL_ENV=$PWD/.venv" >> $GITHUB_ENV
+              echo "$PWD/.venv/bin" >> $GITHUB_PATH
+              uv pip install requests
+              uv pip install copr
+
+         - name: Setup RPM build environment
+           run: |
+              mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+
+         - name: Configure COPR credentials
+           env:
+              COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+           run: |
+              mkdir -p ~/.config
+              echo "$COPR_CONFIG" > ~/.config/copr
+              chmod 600 ~/.config/copr
+
+         - name: Run update script
+           env:
+              RPM_BUILD_ROOT: /root/rpmbuild
+           run: |
+              # Create directory structure
+              mkdir -p /root/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+
+              # Create symlink for GitHub Actions environment path
+              mkdir -p /github/home
+              ln -s /root/rpmbuild /github/home/rpmbuild
+
+              # Copy files to the correct location
+              cp zen-browser.spec /root/rpmbuild/SPECS/
+              cp update-zen-browser.py /root/rpmbuild/SPECS/
+
+              # Run the script with absolute path
+              cd /root/rpmbuild/SPECS
+              python3 update-zen-browser.py
+
+         - name: Set version output
+           id: set-version
+           run: |
+              # Check if we have a new version
+              if grep -q "New version found" /root/rpmbuild/SPECS/*.log 2>/dev/null || [ -f /root/rpmbuild/SRPMS/*.src.rpm ]; then
+                NEW_VERSION=$(grep "^Version:" /root/rpmbuild/SPECS/zen-browser.spec | awk '{print $2}')
+                echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+                echo "updated=true" >> $GITHUB_OUTPUT
+                # Save the spec file for next job
+                mkdir -p /tmp/artifacts
+                cp /root/rpmbuild/SPECS/zen-browser.spec /tmp/artifacts/
+              else
+                echo "updated=false" >> $GITHUB_OUTPUT
+              fi
+
+         - name: Archive built RPM
+           if: steps.set-version.outputs.updated == 'true'
+           uses: actions/upload-artifact@v4
+           with:
+              name: zen-browser-srpm
+              path: /root/rpmbuild/SRPMS/*.src.rpm
+              retention-days: 7
+
+         - name: Upload spec file
+           if: steps.set-version.outputs.updated == 'true'
+           uses: actions/upload-artifact@v4
+           with:
+              name: spec-file
+              path: /tmp/artifacts/zen-browser.spec
+              retention-days: 7
+
+   # Second job: Update repository
+   update-repository:
+      needs: build-in-container
+      if: needs.build-in-container.outputs.updated == 'true'
+      runs-on: ubuntu-latest
+
+      steps:
+         - name: Check out repository
+           uses: actions/checkout@v4
+
+         - name: Download spec file
+           uses: actions/download-artifact@v4
+           with:
+              name: spec-file
+
+         - name: Commit and push changes
+           run: |
+              git config --global user.name "GitHub Action"
+              git config --global user.email "action@github.com"
+              git add zen-browser.spec
+              git commit -m "Update zen-browser spec file to version ${{ needs.build-in-container.outputs.new_version }}"
+              git push
