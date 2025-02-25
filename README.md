@@ -18,7 +18,6 @@ This project automatically checks for new Zen Browser releases every 6 hours and
 - [`zen-browser.spec`](zen-browser.spec) - RPM specification file defining how to package Zen Browser
 
 - [`.github/workflows/script.yml`](.github/workflows/script.yml) - GitHub Actions workflow that:
-  - Runs every 6 hours (9 AM, 3 PM, 9 PM, 3 AM IST)
   - Sets up Fedora container environment
   - Executes the update script
   - Commits spec file changes back to the repository
