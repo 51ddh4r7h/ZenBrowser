@@ -1,6 +1,6 @@
 # Zen Browser RPM Builder
 
-Automated RPM package builder for [Zen Browser](https://zen-browser.app) - a privacy-focused Firefox fork. This repository contains the necessary files to automatically build and publish RPM packages for Fedora Linux via COPR.
+Automated RPM package builder for [Zen Browser](https://zen-browser.app) - a customizability, design and privacy-focused   Firefox fork. This repository contains the necessary files to automatically build and publish RPM packages for Fedora Linux via COPR.
 
 ## Overview
 
