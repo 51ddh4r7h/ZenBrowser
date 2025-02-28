@@ -38,6 +38,11 @@ def get_latest_release():
     release_data = response.json()
     version = release_data["tag_name"]
 
+    # Skip twilight/nightly builds (containing 't' in version)
+    if 't' in version:
+        print(f"Skipping twilight/nightly build version: {version}")
+        sys.exit(0)
+
     # Find the Linux x86_64 asset
     linux_asset = None
     for asset in release_data["assets"]:
