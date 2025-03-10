@@ -4,7 +4,7 @@ Automated RPM package builder for [Zen Browser](https://zen-browser.app) - a cus
 
 ## Overview
 
-This project automatically checks for new Zen Browser releases every 6 hours and builds RPM packages when updates are available. Packages are published to the [zen-browser COPR repository](https://copr.fedorainfracloud.org/coprs/51ddh4r7h/zen-browser/).
+This project is manually checks for new Zen Browser releases and builds RPM packages when updates are available. Packages are published to the [zen-browser COPR repository](https://copr.fedorainfracloud.org/coprs/51ddh4r7h/zen-browser/).
 
 ### Key Components
 
