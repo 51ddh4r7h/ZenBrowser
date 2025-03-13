@@ -5,7 +5,6 @@ Summary:        Zen Browser – a customizable, privacy-focused Firefox fork
 License:        MPL-2.0
 URL:            https://zen-browser.app
 Source0:        https://github.com/zen-browser/desktop/releases/download/1.9.1b/zen.linux-x86_64.tar.xz
-# Common Firefox/browser dependencies
 
 ExclusiveArch:      x86_64
 
