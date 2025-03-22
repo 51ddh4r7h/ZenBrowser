@@ -8,7 +8,7 @@ This project is manually checks for new Zen Browser releases and builds RPM pack
 
 ### Key Components
 
-- [`update-zen-browser.py`](update-zen-browser.py) - Python script that:
+- [`update-zen-browser.sh`](update-zen-browser.sh) - Shell script that:
   - Checks for new Zen Browser releases via GitHub API
   - Downloads source packages
   - Updates the spec file
