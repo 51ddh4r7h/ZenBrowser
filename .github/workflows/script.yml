@@ -49,9 +49,22 @@ jobs:
               # Copy files to the correct location
               cp zen-browser.spec /root/rpmbuild/SPECS/
 
-              # Compile and run the Go script
+              # Compile the Go script
+              echo "Compiling Go script..."
               go build -o update-zen-browser update-zen-browser.go
-              ./update-zen-browser > /root/rpmbuild/SPECS/update.log 2>&1
+              
+              # Run the script with tee to display output and also save to log file
+              echo "Running update script with verbose output..."
+              ./update-zen-browser | tee /root/rpmbuild/SPECS/update.log
+              
+              # Preserve the exit code from the script
+              exit_code=${PIPESTATUS[0]}
+              
+              # Show the log file has been created
+              echo "Script completed. Log file saved to /root/rpmbuild/SPECS/update.log"
+              
+              # Exit with the script's exit code to preserve error states
+              exit $exit_code
 
          - name: Set version output
            id: set-version
