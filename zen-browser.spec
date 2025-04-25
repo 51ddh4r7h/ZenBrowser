@@ -73,18 +73,3 @@ EOF
 %changelog
 * Sun Apr 20 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11.5b-1
 - Update to 1.11.5b
-
-* Fri Apr 18 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11.4b-1
-- Update to 1.11.4b
-
-* Mon Apr 14 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11.3b-1
-- Update to 1.11.3b
-
-* Fri Apr 11 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11.2b-1
-- Update to 1.11.2b
-
-* Sat Apr 5 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11.1b-1
-- Update to 1.11.1b
-
-* Sat Apr 05 2025 COPR Build System <copr-build@fedoraproject.org> - 1.11b-1
-- Update to 1.11b
