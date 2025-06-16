@@ -1,10 +1,10 @@
 Name:           zen-browser
-Version:        1.12.10b
+Version:        1.13.1b
 Release:        1%{?dist}
 Summary:        Zen Browser – a customizable, privacy-focused Firefox fork
 License:        MPL-2.0
 URL:            https://zen-browser.app
-Source0:        https://github.com/zen-browser/desktop/releases/download/1.12.10b/zen.linux-x86_64.tar.xz
+Source0:        https://github.com/zen-browser/desktop/releases/download/1.13.1b/zen.linux-x86_64.tar.xz
 
 ExclusiveArch:      x86_64
 
@@ -49,7 +49,7 @@ cp browser/chrome/icons/default/default128.png %{buildroot}/usr/share/icons/hico
 mkdir -p %{buildroot}/usr/share/applications
 cat > %{buildroot}/usr/share/applications/zen-browser.desktop << 'EOF'
 [Desktop Entry]
-Version=1.12.10b
+Version=1.13.1b
 Name=Zen Browser
 Comment=Experience tranquillity while browsing the web without tracking.
 GenericName=Web Browser
@@ -71,6 +71,9 @@ EOF
 /usr/share/icons/hicolor/128x128/apps/zen-browser.png
 
 %changelog
+* Mon Jun 16 2025 COPR Build System <copr-build@fedoraproject.org> - 1.13.1b-1
+- Update to 1.13.1b
+
 * Mon Jun 2 2025 COPR Build System <copr-build@fedoraproject.org> - 1.12.10b-1
 - Update to 1.12.10b
 
